@@ -1,6 +1,6 @@
 ---
 title: "Exploratory Data Analysis - Week 1 Project"
-author: "Jonathan Sanito"
+author: "jonsan21"
 date: "August 6, 2015"
 output: html_document
 ---
@@ -62,7 +62,7 @@ The four plots that you will need to construct are shown below.
 #read data
 hpc <- read.table("household_power_consumption.txt",header=TRUE,sep=";",na.strings = "?",stringsAsFactors = FALSE)
 hpc <- subset(hpc, Date=="1/2/2007" | Date=="2/2/2007")
-hpc$weekday <- weekdays(as.Date(hpcp$Date, "%d/%m/%Y"), abbreviate = TRUE)
+hpc$time <- strptime(paste (hpc$Date, hpc$Time), '%d/%m/%Y %H:%M:%S')
 
 
 ```
@@ -85,8 +85,7 @@ dev.off()
 #plot 2
 par(mfrow = c(1, 1), mar = c(5, 5, 2, 1))
 
-plot(hpc$Global_active_power, type="l", xaxt = "n", xlab ="",ylab = "Global Active Power (kilowatts)")
-axis(1, c(1, (nrow(hpc)/2+1), nrow(hpc)), labels = c("Thu", "Fri", "Sat"))
+plot(hpc$time, hpc$Global_active_power, type="l", xlab ="",ylab = "Global Active Power (kilowatts)")
 
 dev.copy(png, file = "plot2.png", height = 480, width = 480)
 dev.off()
@@ -96,11 +95,11 @@ dev.off()
 #plot 3
 par(mfrow = c(1, 1), mar = c(5, 5, 2, 1))
 
-with(hpc, plot(Sub_metering_1, xaxt = "n", xlab ="", type = "l", ylab = "Energy sub metering"))
-with(hpc, lines(Sub_metering_2, col = "red"))
-with(hpc, lines(Sub_metering_3, col = "blue"))
+with(hpc, plot(time, Sub_metering_1, xaxt = "n", type = "l", ylab = "Energy sub metering"))
+with(hpc, lines(time, Sub_metering_2, col = "red"))
+with(hpc, lines(time, Sub_metering_3, col = "blue"))
 legend("topright", lwd =1, col = c("black", "red", "blue"), legend = c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
-axis(1, c(1, (nrow(hpc)/2+1), nrow(hpc)), labels = c("Thu", "Fri", "Sat"))
+
 
 dev.copy(png, file = "plot3.png", height = 480, width = 480)
 dev.off()
@@ -110,20 +109,20 @@ dev.off()
 #plot 4
 par(mfrow = c(2, 2), mar = c(4, 5, 1, 1))
 
-plot(hpc$Global_active_power, type="l", xaxt = "n", xlab ="",ylab = "Global Active Power")
-axis(1, c(1, (nrow(hpc)/2+1), nrow(hpc)), labels = c("Thu", "Fri", "Sat"))
+plot(hpc$time, hpc$Global_active_power, type="l", xlab ="",ylab = "Global Active Power")
 
-plot(hpc$Voltage, type="l", xaxt = "n", xlab ="datetime",ylab = "Voltage")
-axis(1, c(1, (nrow(hpc)/2+1), nrow(hpc)), labels = c("Thu", "Fri", "Sat"))
 
-with(hpc, plot(Sub_metering_1, xaxt = "n", xlab ="", type = "l", ylab = "Energy sub metering"))
-with(hpc, lines(Sub_metering_2, col = "red"))
-with(hpc, lines(Sub_metering_3, col = "blue"))
+plot(hpc$time, hpc$Voltage, type="l", xlab ="datetime",ylab = "Voltage")
+
+
+with(hpc, plot(time, Sub_metering_1, xaxt = "n", type = "l", ylab = "Energy sub metering"))
+with(hpc, lines(time, Sub_metering_2, col = "red"))
+with(hpc, lines(time, Sub_metering_3, col = "blue"))
 legend("topright", bty = "n", lty = 1, col = c("black", "red", "blue"), legend = c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
-axis(1, c(1, (nrow(hpc)/2+1), nrow(hpc)), labels = c("Thu", "Fri", "Sat"))
 
-plot(hpc$Global_reactive_power, type="l", xaxt = "n", xlab ="datetime",ylab = "Global_reactive_power")
-axis(1, c(1, (nrow(hpc)/2+1), nrow(hpc)), labels = c("Thu", "Fri", "Sat"))
+
+plot(hpc$time, hpc$Global_reactive_power, type="l", xlab ="datetime",ylab = "Global_reactive_power")
+
 
 dev.copy(png, file = "plot4.png", height = 480, width = 480)
 dev.off()
